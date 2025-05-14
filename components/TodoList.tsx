@@ -46,7 +46,7 @@ export default function TodoList({ todos, setTodos }: { todos: Todo[]; setTodos:
               >
                 {todo.heading}
               </span>
-              <span className="ml-4 text-lg font-bold text-accent bg-background px-4 py-2 rounded-xl shadow border-2 border-accent">
+              <span className="ml-4 text-lg font-bold text-white bg-background px-4 py-2 rounded-xl shadow border-2 border-accent">
                 {todo.time} min
               </span>
               <button
@@ -58,7 +58,7 @@ export default function TodoList({ todos, setTodos }: { todos: Todo[]; setTodos:
               </button>
             </div>
             {todo.steps && (
-              <div className="text-sm text-accent mt-1 whitespace-pre-line">
+              <div className="text-sm text-secondary dark:text-secondary mt-1 whitespace-pre-line">
                 {todo.steps}
               </div>
             )}

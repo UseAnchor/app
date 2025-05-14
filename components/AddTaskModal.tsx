@@ -46,7 +46,7 @@ export default function AddTaskModal({ open, onClose, onAddTask }: AddTaskModalP
         <div className="mb-4">
           <label className="block text-primary mb-1 font-medium">Task Title <span className="text-secondary">*</span></label>
           <input
-            className="w-full rounded-lg px-4 py-2 bg-background/70 border border-primary text-text focus:outline-none focus:ring-2 focus:ring-secondary"
+            className="w-full rounded-lg px-4 py-2 bg-background/70 border border-primary text-backgroundLight focus:outline-none focus:ring-2 focus:ring-secondary"
             value={heading}
             onChange={e => setHeading(e.target.value)}
             placeholder="e.g. Write report"
@@ -68,7 +68,7 @@ export default function AddTaskModal({ open, onClose, onAddTask }: AddTaskModalP
         <div className="mb-6">
           <label className="block text-primary mb-1 font-medium">Estimated Time <span className="text-secondary">*</span></label>
           <input
-            className="w-full rounded-lg px-4 py-2 bg-background/70 border border-primary text-text focus:outline-none focus:ring-2 focus:ring-secondary"
+            className="w-full rounded-lg px-4 py-2 bg-background/70 border border-primary text-backgroundLight focus:outline-none focus:ring-2 focus:ring-secondary"
             type="number"
             min={1}
             value={time}

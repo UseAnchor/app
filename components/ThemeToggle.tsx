@@ -15,6 +15,7 @@ export default function ThemeToggle() {
       root.classList.add('light');
       localStorage.setItem('theme', 'light');
     }
+    root.style.setProperty('--text-color', 'var(--secondary)');
   }, [dark]);
 
   useEffect(() => {
