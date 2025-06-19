@@ -63,3 +63,8 @@ html.dark .glassmorphic {
   background: rgba(100,116,139,0.2);
   border-radius: 8px;
 }
+
+/* Ensure time indicator text stays white in light mode */
+html.light .todo-time-indicator {
+  color: #fff !important;
+}

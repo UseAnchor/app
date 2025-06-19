@@ -10,14 +10,6 @@ interface Todo {
   completed: boolean;
 }
 
-interface Todo {
-  id: number;
-  heading: string;
-  steps: string;
-  time: number;
-  completed: boolean;
-}
-
 export default function TodoList({ todos, setTodos }: { todos: Todo[]; setTodos: (fn: (prev: Todo[]) => Todo[]) => void }) {
   const toggleTodo = (id: number) => {
     setTodos(todos =>
@@ -46,7 +38,7 @@ export default function TodoList({ todos, setTodos }: { todos: Todo[]; setTodos:
               >
                 {todo.heading}
               </span>
-              <span className="ml-4 text-lg font-bold text-white bg-background px-4 py-2 rounded-xl shadow border-2 border-accent">
+              <span className="ml-4 text-lg font-bold text-white bg-background px-4 py-2 rounded-xl shadow border-2 border-accent todo-time-indicator">
                 {todo.time} min
               </span>
               <button

@@ -8,17 +8,27 @@ export default function Home() {
   const [todos, setTodos] = useState<any[]>([]);
   const quickAddRef = useRef<HTMLDivElement>(null);
 
-  const addTodo = (task: { heading: string; time?: number }) => {
-    setTodos(prev => [
-      ...prev,
-      { 
-        id: Date.now(), 
-        heading: task.heading, 
-        steps: "", 
-        time: task.time || 0,
-        completed: false 
-      },
-    ]);
+  const addTodo = async (task: { heading: string; time?: number }) => {
+    // Compose the todo text for the API (since API expects 'text')
+    const text = `${task.heading}${task.time ? ` (${task.time} min)` : ''}`;
+    await fetch('/api/todos', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text }),
+    });
+    // Fetch updated todos
+    const res = await fetch('/api/todos');
+    const data = await res.json();
+    // Map API todos to UI format
+    const mappedTodos = data.todos.map((todo: any) => ({
+      id: todo.id,
+      heading: todo.text,
+      steps: '',
+      time: '',
+      completed: false,
+    }));
+    setTodos(mappedTodos);
+    console.log('Todos from API:', mappedTodos);
   };
 
   return (
