@@ -7,10 +7,14 @@ interface QuickAddProps {
   onAddTask: (task: { heading: string; time?: number }) => void;
   className?: string;
   triggerRef?: React.RefObject<HTMLDivElement>;
+  isOpen?: boolean;
+  setIsOpen?: (open: boolean) => void;
 }
 
-export default function QuickAdd({ onAddTask, className = '', triggerRef }: QuickAddProps) {
-  const [isOpen, setIsOpen] = useState(false);
+export default function QuickAdd({ onAddTask, className = '', triggerRef, isOpen: controlledIsOpen, setIsOpen: setControlledIsOpen }: QuickAddProps) {
+  const [uncontrolledIsOpen, setUncontrolledIsOpen] = useState(false);
+  const isOpen = controlledIsOpen !== undefined ? controlledIsOpen : uncontrolledIsOpen;
+  const setIsOpen = setControlledIsOpen || setUncontrolledIsOpen;
   const [inputValue, setInputValue] = useState("");
   const [timeLimit, setTimeLimit] = useState("");
 
@@ -21,13 +25,13 @@ export default function QuickAdd({ onAddTask, className = '', triggerRef }: Quic
   });
 
   useHotkeys("esc", () => {
-    handleClose();
-  });
+    setIsOpen(false);
+  }, { enabled: isOpen });
 
   useEffect(() => {
     if (isOpen) {
       const input = document.querySelector("input[placeholder='Type a task...']");
-      input?.focus();
+      (input as HTMLInputElement | null)?.focus();
     }
   }, [isOpen]);
 

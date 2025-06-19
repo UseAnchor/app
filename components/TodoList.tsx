@@ -10,17 +10,14 @@ interface Todo {
   completed: boolean;
 }
 
-export default function TodoList({ todos, setTodos }: { todos: Todo[]; setTodos: (fn: (prev: Todo[]) => Todo[]) => void }) {
+export default function TodoList({ todos, setTodos, removeTodo, completeTodo }: {
+  todos: Todo[];
+  setTodos: (fn: (prev: Todo[]) => Todo[]) => void;
+  removeTodo: (id: number) => void;
+  completeTodo: () => void;
+}) {
   const toggleTodo = (id: number) => {
-    setTodos(todos =>
-      todos.map(todo =>
-        todo.id === id ? { ...todo, completed: !todo.completed } : todo
-      )
-    );
-  };
-
-  const removeTodo = (id: number) => {
-    setTodos(todos => todos.filter(todo => todo.id !== id));
+    completeTodo();
   };
 
   return (

@@ -6,6 +6,7 @@ import QuickAdd from '../components/QuickAdd';
 
 export default function Home() {
   const [todos, setTodos] = useState<any[]>([]);
+  const [isQuickAddOpen, setQuickAddOpen] = useState(false);
   const quickAddRef = useRef<HTMLDivElement>(null);
 
   const addTodo = async (task: { heading: string; time?: number }) => {
@@ -20,6 +21,38 @@ export default function Home() {
     const res = await fetch('/api/todos');
     const data = await res.json();
     // Map API todos to UI format
+    const mappedTodos = data.todos.map((todo: any) => {
+      // Try to extract time from the text, e.g. 'Task name (30 min)'
+      const match = todo.text.match(/^(.*) \((\d+) min\)$/);
+      return match
+        ? {
+            id: todo.id,
+            heading: match[1],
+            steps: '',
+            time: match[2],
+            completed: false,
+          }
+        : {
+            id: todo.id,
+            heading: todo.text,
+            steps: '',
+            time: '',
+            completed: false,
+          };
+    });
+    setTodos(mappedTodos);
+    console.log('Todos from API:', mappedTodos);
+  };
+
+  // Remove todo from API and refresh
+  const removeTodo = async (id: number) => {
+    await fetch('/api/todos', {
+      method: 'DELETE',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id }),
+    });
+    const res = await fetch('/api/todos');
+    const data = await res.json();
     const mappedTodos = data.todos.map((todo: any) => ({
       id: todo.id,
       heading: todo.text,
@@ -28,7 +61,21 @@ export default function Home() {
       completed: false,
     }));
     setTodos(mappedTodos);
-    console.log('Todos from API:', mappedTodos);
+  };
+
+  // Complete (advance) todo in API and refresh
+  const completeTodo = async () => {
+    await fetch('/api/todos', { method: 'PUT' });
+    const res = await fetch('/api/todos');
+    const data = await res.json();
+    const mappedTodos = data.todos.map((todo: any) => ({
+      id: todo.id,
+      heading: todo.text,
+      steps: '',
+      time: '',
+      completed: false,
+    }));
+    setTodos(mappedTodos);
   };
 
   return (
@@ -37,11 +84,7 @@ export default function Home() {
         <h1 className="text-3xl font-bold mb-6 text-center select-none text-primary">Tasks</h1>
         <div className="flex items-center gap-4 mb-6">
           <button
-            onClick={() => {
-              if (quickAddRef.current) {
-                quickAddRef.current.click();
-              }
-            }}
+            onClick={() => setQuickAddOpen(true)}
             className="px-4 py-2 rounded-lg bg-secondary hover:bg-secondary/80 text-text font-semibold shadow transition"
             aria-label="Add task"
           >
@@ -49,8 +92,8 @@ export default function Home() {
           </button>
           <span className="text-secondary text-sm">or press Ctrl+Alt+K</span>
         </div>
-        <TodoList todos={todos} setTodos={setTodos} />
-        <QuickAdd onAddTask={addTodo} className="quick-add" triggerRef={quickAddRef} />
+        <TodoList todos={todos} setTodos={setTodos} removeTodo={removeTodo} completeTodo={completeTodo} />
+        <QuickAdd onAddTask={addTodo} className="quick-add" triggerRef={quickAddRef} isOpen={isQuickAddOpen} setIsOpen={setQuickAddOpen} />
       </div>
     </main>
   );
