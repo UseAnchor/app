@@ -11,12 +11,14 @@ export default function Home() {
 
   const addTodo = async (task: { heading: string; time?: number }) => {
     // Compose the todo text for the API (since API expects 'text')
-    const text = `${task.heading}${task.time ? ` (${task.time} min)` : ''}`;
+    const text = task.heading;
+    const time = task.time;
     await fetch('/api/todos', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text }),
+      body: JSON.stringify({ text, time }),
     });
+    console.log(`Task added: ${text}, Time: ${time} min`);
     // Fetch updated todos
     const res = await fetch('/api/todos');
     const data = await res.json();

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
 // In-memory todos array
-let todos: { id: number; text: string }[] = [];
+let todos: { id: number; text: string; time: number }[] = [];
 let currentIndex = 0;
 
 export async function GET() {
@@ -9,10 +9,11 @@ export async function GET() {
 }
 
 export async function POST(req: NextRequest) {
-  const { text } = await req.json();
+  const { text, time } = await req.json();
   if (!text) return NextResponse.json({ error: 'Missing text' }, { status: 400 });
+  if (typeof time !== 'number' || time <= 0) return NextResponse.json({ error: 'Missing or invalid time' }, { status: 400 });
   const id = Date.now();
-  todos.push({ id, text });
+  todos.push({ id, text, time });
   return NextResponse.json({ todos, currentIndex });
 }
 
